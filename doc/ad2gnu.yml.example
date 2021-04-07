@@ -1,0 +1,37 @@
+debug: 1
+ldap:
+  # local server configuration.
+  base:     "dc=my,dc=local"
+  # dn of admin in local ldap server.
+  admin:    "cn=localadmin,dc=my,dc=local"
+  # la sua password
+  password: "change_meee"
+ad:
+  # AD global catalog for generic query
+  # gc is global catalog but does not contain all information needed.
+  # so for some query we need to have the realms and servers
+  gc:
+    host: "gc.example.dir.example.it"
+    port: 3268
+    base: "dc=dir,dc=example,dc=it"
+  studenti:
+    host: "DomainDnsZones.example.dir.it"
+    port: 389
+    base: "dc=studenti,dc=dir,dc=example,dc=it"
+  personale:
+    host: "aki.example.dir.it"
+    port: 389
+    base: "dc=personale,dc=dir,dc=example,dc=it"
+
+account:
+  # gli utenti del vostro ldap avranno come homedir $homedir_base/loginname
+  homedir:   '/export/home'
+  # per ora facciamo che tutti gli utenti sono nello stesso gruppo
+  # sara' poi facile creare nuovi gruppi in ldap
+  gidnumber: 1000
+  # la base Security IDentifier di samba. scegliere a caso o discuterne....
+  # SID               = "S-1-99-99-"
+
+groups:
+  test_group:
+    ad: "CN=testname,OU=SomeOu,DC=dir,DC=example,DC=it" 

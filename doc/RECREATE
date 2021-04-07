@@ -1,0 +1,35 @@
+/etc/init.d/slapd stop
+rm -rf /var/lib/ldap/*
+dpkg-reconfigure slapd
+
+mkdir -p /tmp/ldap
+cat > /tmp/ldap/pippo.ldif <<EOF
+include /etc/ldap/schema/core.schema
+include /etc/ldap/schema/cosine.schema
+include /etc/ldap/schema/inetorgperson.schema
+include /etc/ldap/schema/nis.schema
+include /etc/ldap/schema/samba.schema
+EOF
+slaptest -f /tmp/ldap/pippo.ldif -F /tmp/ldap/
+rm -f /etc/ldap/slapd.d/cn\=config/cn\=schema/*
+cp -r /tmp/ldap/cn\=config/cn\=schema/* /etc/ldap/slapd.d/cn\=config/cn\=schema/
+chown -R openldap.openldap /etc/ldap/slapd.d/cn\=config/cn\=schema/
+
+/etc/init.d/slapd restart
+
+# ???
+# ldapadd    -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/samba.schema 
+
+ldapmodify -Y EXTERNAL -H ldapi:/// -f ldif/virtlab/conf.ldif
+ldapadd    -Y EXTERNAL -H ldapi:/// -f ldif/virtlab/virtlab.ldif 
+# ldapmodify -Y EXTERNAL -H ldapi:/// -f ldif/dm_tls.ldif 
+ldapadd    -Y EXTERNAL -H ldapi:/// -f ldif/virtlab/localadmin.ldif
+# cp ldif/virtlab/change_password.ldif /tmp
+# slappassd etc etc
+ldapmodify -Y EXTERNAL -H ldapi:/// -f /tmp/change_password.ldif
+
+
+# REPLICA
+#sudo -u openldap mkdir /var/lib/ldap/accesslog
+#sudo -u openldap cp /var/lib/ldap/DB_CONFIG /var/lib/ldap/accesslog/
+#ldapadd    -Y EXTERNAL -H ldapi:/// -f ldif/provider_sync.ldif

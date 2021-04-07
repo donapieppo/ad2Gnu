@@ -1,0 +1,23 @@
+apt-get install libldap2-dev libsasl2-modules-gssapi-mit libsasl2-dev
+
+https://help.ubuntu.com/10.04/serverguide/C/openldap-server.html
+
+In Debug
+/usr/sbin/slapd -h 'ldap:/// ldapi:///' -g openldap -u openldap -F /etc/ldap/slapd.d -d 384 
+
+ldapsearch -H ldap://razor.dir.unibo.it -x -b "" -s base -LLL supportedSASLMechanisms
+ldapsearch  -Y EXTERNAL -H ldapi:/// -b "cn=config" olcAccess
+
+
+
+############ DAEMON ################
+# ASSURDO!!!!!!
+####################################
+chgrp ad2gnu /var/lib/samba/secrets.tdb
+chmod 664 /var/lib/samba/secrets.tdb
+/etc/passwd:ad2gnu:x:999:999:AD2gnu:/var/lib/ad2gnu:/bin/bash
+/etc/shadow:ad2gnu:*:15538:0:99999:7:::
+/etc/group:ad2gnu:x:999:
+
+
+
