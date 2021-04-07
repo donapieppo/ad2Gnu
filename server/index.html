@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title>Lab Users</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+  </head>
+  <body>
+    <h1>Accesso studenti/personale in pc laboratorio</h1>
+    <form action="/create" method="POST">
+      <label>Dominio</label>
+      <select name="d">
+        <option>STUDENTI</option>
+        <option>PERSONALE</option>
+      </select>
+      <br/>
+      <label>nome.cognome (senza @unibo.it / @studenti.unibo.it)</label>
+      <input type="text" name="u"></input>
+      <br/>
+      <input type="submit"></input>
+    </form>
+  </body>
+</html>
