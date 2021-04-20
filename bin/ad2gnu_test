@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'pp'
+require 'ad2gnu'
+
+linuxdsa = AD2Gnu::Base.new()
+# pp linuxdsa.AD_login.ad.get_user_by_id(574599)
+# pp linuxdsa.AD_login.ad.get_user_by_upn("pietro.donatini@unibo.it")
+# pp linuxdsa.AD_login.ad.get_user_by_cn("Mat033845")
+
+user = linuxdsa.AD_login.ad.get_user_by_upn("monica.ida@unibo.it")
+pp user
+pp user.sn
+pp user.sn.encoding
+pp user.sn.force_encoding("UTF-8")
+

@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'pp'
+require 'ad2gnu'
+
+upn = ARGV[0] or raise "dammi upn"
+
+linuxdsa = AD2Gnu::Base.new()
+
+pp linuxdsa.AD_login.ad.search_array("userPrincipalName=#{upn}");
+
+
