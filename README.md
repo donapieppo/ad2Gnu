@@ -29,3 +29,22 @@ Edit /etc/ad2gnu.yml file. You find an example in doc directory.
 
 ## Simple Usage
 
+
+## DOCKER
+
+edit configurations for docker: ``docker-compose.yml`` for environment variables and then ``doc/docker_ad2gnu.yml`` and ``doc/docker_ldap.conf``.
+
+```bash
+docker-compose build
+docker-compose run ad2gnu /bin/bash
+``` 
+
+opens a bash on admin host
+
+```bash
+ldapsearch -x -H ldap://docker-ldap -b dc=dm,dc=unibo,dc=it -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee 
+kinit pietro.donatini@PERSONALE.DIR.UNIBO.IT
+ad2gnu_add_user.rb pietro.donatini
+```
+
+
