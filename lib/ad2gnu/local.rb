@@ -10,7 +10,9 @@ class Local < Ldap
     @logger = logger
     @base   = @conf['base']
 
-    @conn = LDAP::Conn.new('127.0.0.1').set_option(LDAP::LDAP_OPT_PROTOCOL_VERSION, 3).simple_bind(@conf['admin'], @conf['password'])
+    @conn = LDAP::Conn.new(@conf['host'])
+                      .set_option(LDAP::LDAP_OPT_PROTOCOL_VERSION, 3)
+                      .simple_bind(@conf['admin'], @conf['password'])
     @conn.perror("bind local")
   end
 
