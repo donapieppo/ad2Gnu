@@ -1,27 +1,25 @@
 debug: 1
 ldap:
-  # local server configuration.
-  base:     "dc=my,dc=local"
-  # dn of admin in local ldap server.
-  admin:    "cn=localadmin,dc=my,dc=local"
-  # la sua password
+  base:  "dc=dm,dc=unibo,dc=it"
+  admin: "cn=admin,dc=dc=dm,dc=unibo,dc=it"
+  host:  "docker-ldap"
   password: "change_meee"
 ad:
   # AD global catalog for generic query
   # gc is global catalog but does not contain all information needed.
   # so for some query we need to have the realms and servers
   gc:
-    host: "gc.example.dir.example.it"
+    host: "razor.dir.unibo.it"
     port: 3268
-    base: "dc=dir,dc=example,dc=it"
+    base: "dc=dir,dc=unibo,dc=it"
   studenti:
-    host: "DomainDnsZones.example.dir.it"
+    host: "DomainDnsZones.studenti.dir.unibo.it"
     port: 389
-    base: "dc=studenti,dc=dir,dc=example,dc=it"
+    base: "dc=studenti,dc=dir,dc=unibo,dc=it"
   personale:
-    host: "aki.example.dir.it"
+    host: "aki.personale.dir.unibo.it"
     port: 389
-    base: "dc=personale,dc=dir,dc=example,dc=it"
+    base: "dc=personale,dc=dir,dc=unibo,dc=it"
 
 account:
   # gli utenti del vostro ldap avranno come homedir $homedir_base/loginname
