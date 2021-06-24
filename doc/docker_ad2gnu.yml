@@ -1,7 +1,7 @@
 debug: 1
 ldap:
   base:  "dc=dm,dc=unibo,dc=it"
-  admin: "cn=admin,dc=dc=dm,dc=unibo,dc=it"
+  admin: "cn=admin,dc=dm,dc=unibo,dc=it"
   host:  "docker-ldap"
   password: "change_meee"
 ad:
