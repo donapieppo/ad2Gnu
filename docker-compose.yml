@@ -36,7 +36,7 @@ services:
     volumes:
       - ./docker/var/lib/ldap:/var/lib/ldap
       - ./docker/etc/ldap/slapd.d:/etc/ldap/slapd.d
-      - ./docker/container/service/slapd/assets/certs:/container/service/slapd/assets/certs
+      - ./docker/container:/container
     ports:
       - "389:389"
       - "636:636"
