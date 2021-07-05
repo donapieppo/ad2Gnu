@@ -84,6 +84,7 @@ changetype: modify
 add: olcAccess
 olcAccess: {2}to * by * read by dn="cn=admin,dc=dm,dc=unibo,dc=it" write
 EOF
+```
 
 ## CLIENTS
 
