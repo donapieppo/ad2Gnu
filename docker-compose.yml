@@ -53,3 +53,9 @@ services:
     depends_on:
       - openldap
         # command: /bin/bash
+  ad2gnu-client:
+    image: debian:buster
+    depends_on: 
+      - ad2gnu
+
+
