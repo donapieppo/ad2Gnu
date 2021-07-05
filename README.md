@@ -1,9 +1,6 @@
 # AD2Gnu
 a library (ruby gem) and some scripts to migrate Active Diretory  accounts to openldap accounts.
 
-a library (ruby gem) and some scripts to migrate Active Diretory
-accounts to openldap accounts.
-
 ## Installation
 
 Add this line to your application's Gemfile:
