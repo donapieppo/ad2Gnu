@@ -10,58 +10,27 @@ provide a smaller set of accounts via openldap.
   - the account in openldap does not have a password but the authetication can be provided by kerberos pam module
   - the account in openldap permits a single uidNumber/gidNumber for user
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'ad2gnu'
-
-And then execute:
-
-    $ bundle
-
-## Configuration
-
-Edit /etc/ad2gnu.yml file. You find an example in doc directory.
-
-* ldap: informations for local ldap server connections
-  * base
-  * admin
-  * password
-* ad: informations for AD servers connections
-  * gc is global catalog
-  * realm_name indormation used to connect to particular AD domains
-* account: local users in local ldap server
-
-## Simple Usage
-
-
-## DOCKER
+## Working example with Docker
 
 To try and test the project you can use docker-compose.
 
 The server comes from [https://github.com/osixia/docker-openldap] (if you build 
 from scratch remember to add samba.schema).
 
-Edit configurations for docker: ``docker-compose.yml`` for environment variables and then ``doc/docker_ad2gnu.yml`` and ``doc/docker_ldap.conf``.
+Edit configurations: ``docker-compose.yml`` for environment variables and then ``doc/docker_ad2gnu.yml`` and ``doc/docker_ldap.conf``.
+Then:
 
 ```bash
 docker-compose build
 docker-compose run ad2gnu /bin/bash
 ``` 
-
-opens a bash on admin host
+opens a bash on a debian system that allows to create accounts.
+In `/etc/ldap/ldap.conf` are configured base and uri.
 
 ```bash
-ldapsearch -x -H ldap://docker-ldap -b dc=dm,dc=unibo,dc=it -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee 
+ldapsearch -x -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee 
 kinit pietro.donatini@PERSONALE.DIR.UNIBO.IT
 ad2gnu_add_user.rb pietro.donatini
-ldapsearch -x -H ldap://docker-ldap -b dc=dm,dc=unibo,dc=it -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee 
-```
-
-In `/etc/ldap/ldap.cond` are configured base and uri.
-
-```bash
 # search pietro.donatini
 ldapsearch -x -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee uid=pietro.donatini
 # delete pietro.donatini
@@ -145,6 +114,31 @@ And then, dadadadada,
 id pietro.donatini
 getent passwd pietro.donatini
 ```
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'ad2gnu'
+
+And then execute:
+
+    $ bundle
+
+## Configuration
+
+Edit /etc/ad2gnu.yml file. You find an example in doc directory.
+
+* ldap: informations for local ldap server connections
+  * base
+  * admin
+  * password
+* ad: informations for AD servers connections
+  * gc is global catalog
+  * realm_name indormation used to connect to particular AD domains
+* account: local users in local ldap server
+
+## Simple Usage
 
 
 
