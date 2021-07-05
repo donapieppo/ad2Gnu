@@ -1,5 +1,14 @@
 # AD2Gnu
-a library (ruby gem) and some scripts to migrate Active Diretory  accounts to openldap accounts.
+a library (ruby gem) and some scripts to copy Active Diretory accounts to openldap accounts.
+
+## Why
+
+With large AD installation (a campus for example) ad2gnu permit to 
+provide a smaller set of accounts via openldap.
+
+  - the account in openldap is a copy of AD account
+  - the account in openldap does not have a password but the authetication can be provided by kerberos pam module
+  - the account in openldap permits a single uidNumber/gidNumber for user
 
 ## Installation
 
