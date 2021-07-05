@@ -56,10 +56,15 @@ ldapsearch -x -H ldap://docker-ldap -b dc=dm,dc=unibo,dc=it -D "cn=admin,dc=dm,d
 In `/etc/ldap/ldap.cond` are configured base and uri.
 
 ```bash
+# search pietro.donatini
 ldapsearch -x -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee uid=pietro.donatini
+# delete pietro.donatini
 ad2gnu_del_user.rb pietro.donatini
+# search pietro.donatini
 ldapsearch -x -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee uid=pietro.donatini
+# add pietro.donatini again
 ad2gnu_add_user.rb pietro.donatini
+ldapsearch -x -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee uid=pietro.donatini
 ```
 
 To make changes on slapd server you can connect with 
@@ -77,7 +82,59 @@ ldapmodify -Y EXTERNAL -H ldapi:/// <<EOF
 dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 add: olcAccess
-olcAccess: {2}to * by * read by dn="cn=admin,dc=virtlab,dc=unibo,dc=it" write
+olcAccess: {2}to * by * read by dn="cn=admin,dc=dm,dc=unibo,dc=it" write
 EOF
+
+## CLIENTS
+
+Just a reminder.
+
+To add a client to ad2gnu authentication
+
+```bash
+apt-get update
+apt-get install openldap-utils libnss-ldapd
+
+cat > /etc/ldap/ldap.conf <<EOF
+BASE            dc=dm,dc=unibo,dc=it
+URI             ldap://docker-ldap
+TLS_CACERT	/etc/ssl/certs/ca-certificates.crt
+EOF
+
+cat /etc/nslcd.conf <<EOF
+uid nslcd
+gid nslcd
+
+uri  ldap://docker-ldap
+base dc=dm,dc=unibo,dc=it
+EOF
+
+cat > /etc/nsswitch.conf <<EOF
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+gshadow:        files
+
+hosts:          files dns
+networks:       files
+
+protocols:      db files
+services:       db files
+ethers:         db files
+rpc:            db files
+
+netgroup:       nis
+EOF
+
+/etc/init.d/nslcd restart
+```
+
+And then, dadadadada, 
+
+```bash
+id pietro.donatini
+getent passwd pietro.donatini
+```
+
 
 
