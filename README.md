@@ -41,7 +41,6 @@ ldapsearch -x -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee uid=pietro.donat
 ad2gnu_add_user.rb pietro.donatini
 ldapsearch -x -D "cn=admin,dc=dm,dc=unibo,dc=it" -w change_meee uid=pietro.donatini
 ```
-
 To make changes on slapd server you can connect with 
 
 ```bash
@@ -72,7 +71,7 @@ and then configure the system to use ldap changing /etc/nsswitch.conf.
 
 ```bash
 apt-get update
-apt-get install openldap-utils libnss-ldapd
+apt-get install openldap-utils libnss-ldapd libpam-krb5 krb5-user
 
 cat > /etc/ldap/ldap.conf <<EOF
 BASE            dc=dm,dc=unibo,dc=it
@@ -114,6 +113,17 @@ And then, dadadadada,
 id pietro.donatini
 getent passwd pietro.donatini
 ```
+
+### Upn / SamAccountName
+
+A big problem with thos approach is that some users will
+try to login with upn and not with SamAccountName.
+And worst, sometimes the SamAccountName for name.surname@unibo.it
+can be name.surname32@PERSONALE.DIR.UNIBO.IT
+
+
+
+
 
 ## Installation
 
