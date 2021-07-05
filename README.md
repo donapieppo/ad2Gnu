@@ -14,7 +14,7 @@ provide a smaller set of accounts via openldap.
 
 Add this line to your application's Gemfile:
 
-    gem 'rlinuxdsa'
+    gem 'ad2gnu'
 
 And then execute:
 
