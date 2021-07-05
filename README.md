@@ -90,7 +90,10 @@ EOF
 
 Just a reminder.
 
-To add a client to ad2gnu authentication
+To add a client to ad2gnu authentication you can use libnss-ldapd 
+(Name Service Switch module that allows using an LDAP server to provide user account, 
+group and  basically any other information that would normally be retrieved from /etc)
+and then configure the system to use ldap changing /etc/nsswitch.conf.
 
 ```bash
 apt-get update
