@@ -79,7 +79,7 @@ URI             ldap://docker-ldap
 TLS_CACERT	/etc/ssl/certs/ca-certificates.crt
 EOF
 
-cat /etc/nslcd.conf <<EOF
+cat > /etc/nslcd.conf <<EOF
 uid nslcd
 gid nslcd
 
@@ -117,13 +117,16 @@ getent passwd pietro.donatini
 ### Upn / SamAccountName
 
 A big problem with thos approach is that some users will
-try to login with upn and not with SamAccountName.
+try to login with upn (name.surname@unibo.it) 
+and not with SamAccountName (name.surname).
+
 And worst, sometimes the SamAccountName for name.surname@unibo.it
-can be name.surname32@PERSONALE.DIR.UNIBO.IT
+can be name.surname32@PERSONALE.DIR.UNIBO.IT.
 
 
-
-
+The module [https://github.com/donapieppo/libpam_upn2sam] can mitigate
+the problem when the first part of upn and SAM are the same. It is
+a pam module that strips the domain from the upn when theuser try to login.
 
 ## Installation
 
