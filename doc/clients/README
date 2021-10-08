@@ -1,0 +1,40 @@
+apt-get install ldap-utils krb5-config krb5-user libpam-krb5 libnss-ldapd
+
+cat > /etc/ldap/ldap.conf <<EOF
+BASE            dc=dm,dc=unibo,dc=it
+URI             ldaps://ad2gnu.dm.unibo.it
+    
+TLS_CACERT      /etc/ldap/ca.cert
+TLS_REQCERT     hard
+EOF
+
+cat > /etc/krb5.conf <<EOF
+[libdefaults]
+  default_realm = PERSONALE.DIR.UNIBO.IT
+    
+  # The following krb5.conf variables are only for MIT Kerberos.
+  kdc_timesync = 1
+  ccache_type = 4
+  forwardable = true
+  proxiable = true
+  
+[realms]
+    
+[domain_realm]
+EOF
+
+cat > /etc/nslcd.conf <<EOF
+uid nslcd
+gid nslcd
+
+uri ldaps://ad2gnu.dm.unibo.it
+
+base dc=dm,dc=unibo,dc=it
+
+tls_cacertfile  /etc/ldap/ca.cert
+tls_reqcert demand
+
+ldap_version 3
+EOF
+
+
