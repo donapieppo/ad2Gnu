@@ -1,4 +1,7 @@
+apt-get install krb5-config krb5-user
+apt-get install slapd
 apt-get install libldap2-dev libsasl2-modules-gssapi-mit libsasl2-dev
+
 
 https://help.ubuntu.com/10.04/serverguide/C/openldap-server.html
 
