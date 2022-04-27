@@ -1,0 +1,17 @@
+[Unit]
+Description=Ad2Gnu Server
+After=network.target
+
+[Service]
+Type=forking
+User=ad2gnu
+Group=ad2gnu
+WorkingDirectory=/home/ad2gnu/server
+PIDFile=/home/ad2gnu/server/thin.pid
+ExecStart=/usr/bin/thin -D -d -c /home/ad2gnu/server -l /home/ad2gnu/server/log/thin.log --pid /home/ad2gnu/server/thin.pid start
+TimeoutSec=20
+
+[Install]
+WantedBy=multi-user.target
+Alias=ad2gnu.service
+
