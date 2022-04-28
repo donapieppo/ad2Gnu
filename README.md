@@ -15,6 +15,7 @@ provide a smaller set of accounts via openldap.
 To try and test the project you can use docker-compose.
 
 Create tls certs in `./docker/etc/certs`.
+On clients you need only ca.crt.
 
 ```bash
 cd ./docker/etc/certs
