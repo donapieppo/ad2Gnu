@@ -16,8 +16,8 @@ services:
       LDAP_RFC2307BIS_SCHEMA: "false"
       LDAP_BACKEND: "mdb"
       LDAP_TLS: "true"
-      LDAP_TLS_CRT_FILENAME: "ldap.crt"
-      LDAP_TLS_KEY_FILENAME: "ldap.key"
+      LDAP_TLS_CRT_FILENAME: "ldap1.crt"
+      LDAP_TLS_KEY_FILENAME: "ldap1.key"
       LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
       LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
       LDAP_TLS_ENFORCE: "false"
@@ -33,10 +33,11 @@ services:
     tty: true
     stdin_open: true
     # Docker host-mounted volumes Syntax: /host/path:/container/path
+    # The directories /var/lib/ldap (LDAP database files) and /etc/ldap/slapd.d (LDAP config files) are used to persist the schema and data 
     volumes:
       - ./docker/var/lib/ldap:/var/lib/ldap
       - ./docker/etc/ldap/slapd.d:/etc/ldap/slapd.d
-      - ./docker/container:/container
+      - ./docker/etc/certs:/container/service/slapd/assets/certs
     ports:
       - "389:389"
       - "636:636"
@@ -54,8 +55,7 @@ services:
       - openldap
         # command: /bin/bash
   ad2gnu-client:
-    image: debian:buster
+    build: .
     depends_on: 
       - ad2gnu
-
 
