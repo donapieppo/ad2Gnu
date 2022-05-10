@@ -2,6 +2,8 @@ FROM debian:bullseye
 MAINTAINER Donapieppo <donapieppo@yahoo.it>
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV LDAP_OPENLDAP_UID 1000
+ENV LDAP_OPENLDAP_GID 1000
 
 RUN apt-get update \
     && apt-get install -y -y --no-install-recommends git apt-transport-https vim \
