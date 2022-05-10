@@ -43,8 +43,9 @@ end
 # and return an array of [status, headers, body]. 
 Thin::Server.start('0.0.0.0', 3000) do
   use Rack::CommonLogger
-  use Rack::Static, :urls => ["/index.html", "/css"], :root => File.expand_path(File.dirname(__FILE__)), 
-                    :index => '/index.html'
+  use Rack::Static, urls: ["/index.html", "/css"], 
+                    root: File.expand_path(File.dirname(__FILE__)), 
+                    index: '/index.html'
   map '/create' do
     run UserCreation.new
   end
