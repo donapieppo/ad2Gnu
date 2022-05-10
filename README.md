@@ -21,18 +21,14 @@ On clients you need only ca.crt.
 cd ./docker/etc/certs
 
 openssl dhparam -out dhparam.pem 2048
-
 openssl req -subj "/C=IT/ST=Italy/L=Bologna/O=Dipartimento di Matematica/OU=Certification Authority/CN=CA dm.unibo.it/emailAddress=dipmat-supportoweb@unibo.it" -days 4000 -new -newkey rsa:2048 -sha1 -x509 -keyout ca.key -out ca.crt
-
 openssl x509 -noout -text -in ca.crt
-
 openssl req -nodes -new -newkey rsa:2048 -out ldap1.csr -keyout ldap1.key -subj "/C=IT/ST=Italy/L=Bologna/O=Dipartimento di Matematica/OU=Ldap Servers/CN=ldap1.dm.unibo.it/emailAddress=dipmat-supportoweb@unibo.it"
-
 openssl x509 -req -in ldap1.csr -out ldap1.cert -CA ca.crt -CAkey ca.key -CAcreateserial -days 4000
 ```
 
-The server comes from [https://github.com/osixia/docker-openldap] (if you build 
-from scratch remember to add samba.schema).
+The server comes from [https://github.com/osixia/docker-openldap] 
+(if you build from scratch remember to add samba.schema).
 
 Edit configurations: ``docker-compose.yml`` for environment variables and then ``doc/docker_ad2gnu.yml`` and ``doc/docker_ldap.conf``.
 Then:
@@ -89,6 +85,7 @@ and then configure the system to use ldap changing /etc/nsswitch.conf.
 ```bash
 apt-get update
 apt-get install openldap-utils libnss-ldapd libpam-krb5 krb5-user
+apt-get install samba-common-bin # if want /usr/bin/net ads kerberos kinit -P
 
 cat > /etc/ldap/ldap.conf <<EOF
 BASE            dc=dm,dc=unibo,dc=it
