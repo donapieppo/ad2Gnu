@@ -15,5 +15,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = AD2Gnu::VERSION
 
+  gem.homepage      = 'https://github.com/donapieppo/ad2Gnu'
+  gem.licenses     = ['MIT']
+
   gem.add_dependency "ruby-ldap"
 end
