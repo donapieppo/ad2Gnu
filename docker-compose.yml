@@ -4,6 +4,8 @@ services:
     image: osixia/openldap:1.5.0
     container_name: openldap
     environment:
+      LDAP_OPENLDAP_UID: "1000"
+      LDAP_OPENLDAP_GID: "1000"
       LDAP_LOG_LEVEL: "256"
       LDAP_ORGANISATION: "Unibo"
       LDAP_DOMAIN: "dm.unibo.it"
@@ -30,8 +32,8 @@ services:
       KEEP_EXISTING_CONFIG: "false"
       LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
       LDAP_SSL_HELPER_PREFIX: "ldap"
-    tty: true
-    stdin_open: true
+    #tty: true
+    #stdin_open: true
     # Docker host-mounted volumes Syntax: /host/path:/container/path
     # The directories /var/lib/ldap (LDAP database files) and /etc/ldap/slapd.d (LDAP config files) are used to persist the schema and data 
     volumes:
@@ -53,9 +55,5 @@ services:
       DOCKER_LDAP_PWD: "pippo123"
     depends_on:
       - openldap
-        # command: /bin/bash
-  ad2gnu-client:
-    build: .
-    depends_on: 
-      - ad2gnu
+    command: /bin/bash
 
