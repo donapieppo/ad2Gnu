@@ -1,0 +1,31 @@
+dn: cn=localadmin,dc=linuxdsa,dc=example,dc=com
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: localadmin
+description: Local admin
+userPassword: {SSHA}ejuudNHojsf92eza2CI6hryjAa4Zsnfj
+
+dn: cn=replicator,dc=linuxdsa,dc=example,dc=com
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: replicator
+description: Local admin
+userPassword: {SSHA}SZcY04Ky3JUEEWoJjIQ5O4GDuY+xFgUY
+
+# dkwlqwiqidw9899dq9diqdjqd
+
+#dn: cn=smbadmin,dc=example,dc=com
+#objectClass: simpleSecurityObject
+#objectClass: organizationalRole
+#cn: smbadmin
+#description: Samba admin
+#structuralObjectClass: organizationalRole
+#
+#dn: sambaDomainName=DEPOSITO,dc=example,dc=com
+#objectClass: sambaDomain
+#objectClass: sambaUnixIdPool
+#sambaDomainName: DEPOSITO
+#sambaSID: S-1-5-21
+#structuralObjectClass: sambaDomain
+#uidNumber: 600
+#gidNumber: 600

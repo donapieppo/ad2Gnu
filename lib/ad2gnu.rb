@@ -1,5 +1,6 @@
 require "yaml"
-require "ldap"
+require "net/ldap"
+require "logger"
 
 require "ad2gnu/version"
 require "ad2gnu/conf"
@@ -8,11 +9,14 @@ require "ad2gnu/ldap"
 require "ad2gnu/ad"
 require "ad2gnu/aduser"
 require "ad2gnu/local"
-require "ad2gnu/localuser"
-require "ad2gnu/localgroup"
+require "ad2gnu/local_user"
+require "ad2gnu/local_group"
 require "ad2gnu/sambasid"
 
 module AD2Gnu
+  class ResultError < StandardError # :nodoc:
+  end
+
   class NoIdAnagraficaUnicaError < StandardError # :nodoc:
   end
 

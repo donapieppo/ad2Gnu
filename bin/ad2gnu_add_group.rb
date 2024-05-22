@@ -3,16 +3,14 @@
 require 'pp'
 require 'ad2gnu'
 
-puts "Give group name"
-name = gets.strip
-puts "Give description"
-description = gets.strip
-puts "Give gidNumber"
-gidNumber = gets.strip
+group = ARGV[0]
+description = ARGV[1]
+gid_number = ARGV[2]
 
-linuxdsa = AD2Gnu::Base.new().local_login
+(group && description) or raise "Give group name, description and gidNumber"
 
-g = AD2Gnu::Localgroup.new(name, description)
-g.gidNumber = gidNumber.to_i
+linuxdsa = AD2Gnu::Base.new.local_login
+
+g = AD2Gnu::LocalGroup.new(group, description)
 
 linuxdsa.local.add_group(g)

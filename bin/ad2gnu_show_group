@@ -7,6 +7,7 @@ g = ARGV[0] or raise "dammi group"
 
 linuxdsa = AD2Gnu::Base.new()
 
-pp linuxdsa.AD_login.ad.search_array("ou=#{g}");
-
-
+f = Net::LDAP::Filter.eq("ou", g)
+linuxdsa.AD_login.ad.conn.search(filter: f) do |ou|
+  pp ou
+end

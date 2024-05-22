@@ -15,5 +15,8 @@ Gem::Specification.new do |gem|
   gem.homepage = "https://github.com/donapieppo/ad2Gnu"
   gem.licenses = ["MIT"]
 
-  gem.add_dependency "ruby-ldap"
+  gem.add_dependency "net-ldap"
+  gem.add_dependency "logger"
+  gem.add_dependency "base64"
+  gem.add_development_dependency "rspec"
 end

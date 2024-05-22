@@ -1,0 +1,10 @@
+dn: dc=example,dc=com
+changetype: modify
+replace: o
+o: Dipartimento di Matematica
+
+dn: dc=example,dc=com
+changetype: modify
+replace: description
+description: Organization per il Dipartimento di Matematica
+

@@ -1,0 +1,24 @@
+# da fare sul master
+# Add indexes to the frontend db.
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+add: olcDbIndex
+olcDbIndex: entryCSN eq
+-
+add: olcDbIndex
+olcDbIndex: entryUUID eq
+
+#Load the syncprov and accesslog modules.
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: syncprov
+
+dn: olcOverlay=syncprov,olcDatabase={1}hdb,cn=config
+changetype: add
+objectClass: olcOverlayConfig
+objectClass: olcSyncProvConfig
+olcOverlay: {0}syncprov
+olcSpCheckpoint: 100 10
+olcSpSessionlog: 100
+

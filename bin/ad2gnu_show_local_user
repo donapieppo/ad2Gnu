@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require "pp"
+require "ad2gnu"
+
+uid = ARGV[0] or raise "dammi upn (ex: pietro.donatini)"
+
+linuxdsa = AD2Gnu::Base.new()
+
+filter = Net::LDAP::Filter.eq("uid", uid)
+linuxdsa.local_login.local.conn.search(filter: filter) do |u|
+  pp u
+end

@@ -10,7 +10,7 @@ linuxdsa = AD2Gnu::Base.new(:studenti).AD_login.local_login
 user = linuxdsa.ad.get_user(new_user) or raise "Non esiste #{new_user} in AD" 
 
 if linuxdsa.local.exists?(user) 
-  puts "Utente gia' presente in locale"
+  puts "Utente già presente in locale"
 else
   linuxdsa.local.add_user(user)
 end

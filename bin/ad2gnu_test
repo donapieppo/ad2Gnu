@@ -1,16 +1,62 @@
 #!/usr/bin/env ruby
 
-require 'pp'
-require 'ad2gnu'
+require "ad2gnu"
 
-linuxdsa = AD2Gnu::Base.new()
+ad2gnu = AD2Gnu::Base.new(:personale).local_login
+
 # pp linuxdsa.AD_login.ad.get_user_by_id(574599)
 # pp linuxdsa.AD_login.ad.get_user_by_upn("pietro.donatini@unibo.it")
 # pp linuxdsa.AD_login.ad.get_user_by_cn("Mat033845")
 
-user = linuxdsa.AD_login.ad.get_user_by_upn("monica.ida@unibo.it")
+user = ad2gnu.local.get_user("nicola.arcozzi")
+group = ad2gnu.local.get_group("pippo")
+p group["memberUid"].include? user.uidNumber
+
+exit
+
+# res = ad2gnu.local.each_user { |x| x.uid }.map(&:uid)
+#pp ad2gnu.local.each_user(&:uid)
+#pp ad2gnu.local.each_group(&:cn)
+p ad2gnu.local.users.map do |u|
+  u.uida
+end
+
+res = ad2gnu.local.groups.map do |g|
+  g.cn
+end
+
+p res
+
+res = ad2gnu.local.groups.map { |g| g.cn }
+p res
+
+
+exit
+
+ldap_group = AD2Gnu::LocalGroup.new("pippo", "pippo 123")
+pp ldap_group
+
+ldap_group.fill_from_ldap_res(ad2gnu.local.get_group(ldap_group.name)) 
+pp ldap_group
+
+exit
+
+if ad2gnu.local.get_group(ldap_group.name)
+  ad2gnu.local.update_group(ldap_group)
+else
+  ad2gnu.local.add_group(ldap_group)
+end
+
+exit
+
+user = ad2gnu.AD_login.ad.get_user_by_upn("nicola.arcozzi@unibo.it")
+ad2gnu.local.del_user(user)
+
+
+
 pp user
 pp user.sn
 pp user.sn.encoding
 pp user.sn.force_encoding("UTF-8")
+
 

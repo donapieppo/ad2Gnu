@@ -1,0 +1,4 @@
+dn: cn=replicator,dc=linuxdsa,dc=example,dc=com
+changetype: modify
+replace: userPassword
+userPassword: {SSHA}xxxxxxxx

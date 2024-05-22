@@ -1,0 +1,32 @@
+dn: ou=groups,dc=example,dc=com
+objectClass: organizationalUnit
+description: Gruppi di dm.unibo.it
+ou: groups
+
+dn: ou=Idmap,dc=example,dc=com
+objectClass: organizationalUnit
+ou: Idmap
+
+# ou di amministrazione ad2gnu (inizialmente per nextuser)
+dn: dc=ad2gnu,dc=example,dc=com
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: ad2gnu
+dc: ad2gnu
+description: Amministrazione ad2gnu 
+
+# next user per avere uid e gid del prossimo utente da aggiungere
+# all'ldap locale
+dn: cn=nextuser,dc=ad2gnu,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+cn: nextuser
+description: Prossimo utente da inserire
+uid: nextuser
+sn: Next User
+givenName: Next User
+uidNumber: 10000
+gidNumber: 10000
+homeDIrectory: /
+

@@ -1,8 +1,7 @@
 module AD2Gnu
 class Ldap
-
-  def search(query)
-    @conn.search(@base, LDAP::LDAP_SCOPE_SUBTREE, query) do |e|
+  def search(filter)
+    @conn.search(filter: filter) do |e|
       yield e
     end
   end
@@ -11,16 +10,18 @@ class Ldap
     @conn.search2(@base, LDAP::LDAP_SCOPE_SUBTREE, query)
   end
 
-  # supponendo univoci gli ou restituisce l'Ldap::Entry relativo all'ou 
+  # supponendo univoci gli ou restituisce l'Ldap::Entry relativo all'ou
   def leggi_ou(ou)
-	  res = @conn.search2(@base, LDAP::LDAP_SCOPE_SUBTREE, "ou=#{ou}")
+    res = @conn.search2(@base, LDAP::LDAP_SCOPE_SUBTREE, "ou=#{ou}")
     res[0]
   end
 
   # supponendo univoci i cn restituisce l'Ldap::Entry relativo al cn
   def leggi_cn(cn)
-    res = @conn.search2(@base, LDAP::LDAP_SCOPE_SUBTREE, "cn=#{cn}")
-    res[0]
+    f = Net::LDAP::Filter.eq("cn", cn)
+    @conn.search(filter: f) do |e|
+      return e
+    end
   end
 
   def search2(base, query)
@@ -28,7 +29,5 @@ class Ldap
       yield e
     end
   end
-
 end
 end
-
