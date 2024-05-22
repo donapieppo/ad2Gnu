@@ -1,5 +1,5 @@
-require 'yaml'
-require 'ldap'
+require "yaml"
+require "ldap"
 
 require "ad2gnu/version"
 require "ad2gnu/conf"
@@ -13,12 +13,12 @@ require "ad2gnu/localgroup"
 require "ad2gnu/sambasid"
 
 module AD2Gnu
-  class NoIdAnagraficaUnicaError < StandardError #:nodoc:
-  end
-    
-  class NotFoundError < StandardError #:nodoc:
+  class NoIdAnagraficaUnicaError < StandardError # :nodoc:
   end
 
-  class AlreadyExistsError < StandardError #:nodo:
+  class NotFoundError < StandardError # :nodoc:
+  end
+
+  class AlreadyExistsError < StandardError # :nodoc:
   end
 end
