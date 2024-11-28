@@ -59,7 +59,7 @@ class Local < Ldap
     f = Net::LDAP::Filter.eq("uid", name) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
     # iterate but return first
     @conn.search(filter: f, return_result: false) do |u|
-      return u
+      return LocalUser.new.fill_from_ldap_res(u)
     end
     nil
   end
@@ -69,6 +69,7 @@ class Local < Ldap
     @conn.search(filter: f, return_result: false) do |u|
       return u["dn"][0]
     end
+    nil
   end
 
   def get_dn_from_uidNumber(uid_number)
@@ -76,15 +77,37 @@ class Local < Ldap
     @conn.search(filter: f, return_result: false) do |u|
       return u["dn"][0]
     end
+    nil
   end
 
   def get_group(cn)
     f = Net::LDAP::Filter.eq("cn", cn) & Net::LDAP::Filter.eq("objectClass", "posixGroup")
     @conn.search(filter: f, return_result: false) do |g|
       # return first
-      return g
+      return LocalGroup.new(cn).fill_from_ldap_res(g)
     end
     nil
+  end
+
+  def check_user_in_group(user, group)
+    group[:memberUid].include? user.uidNumber
+  end
+
+  # si puo' chiamare con un ADUser o con uid
+  def exists?(user)
+    f = case user
+    when ADUser
+      Net::LDAP::Filter.eq("uid", user.sAMAccountName)
+    when String
+      Net::LDAP::Filter.eq("uid", user)
+    else
+      puts "richiesto #{user.inspect} in formato non corretto"
+      return false
+    end
+    @conn.search(filter: f, attributes: ["uid"]) do |r|
+      return true
+    end
+    false
   end
 
   # ricorda che il gecos e' solo in caratteri IA5, che consiste di acii
@@ -140,25 +163,25 @@ class Local < Ldap
 
   # is not a syncronize_in_ldap because groups are
   # only local
-  def add_group(group)
-    dn = "cn=#{group.name},ou=groups,#{@base}"
-    if !group.gidNumber
-      group.gidNumber = read_next_gidNumber
+  def add_group(local_group)
+    dn = "cn=#{local_group.name},ou=groups,#{@base}"
+    if !local_group.gidNumber
+      local_group.gidNumber = read_next_gidNumber
     end
     data = {
       "objectclass" => ["posixGroup"],
-      "cn" => [group.name],
-      "gidNumber" => [group.gidNumber.to_s],
-      "description" => [group.description]
+      "cn" => [local_group.name],
+      "gidNumber" => [local_group.gidNumber.to_s],
+      "description" => [local_group.description]
     }
     @logger.debug("Redy to create #{dn}: #{data.inspect}")
     add(dn, data)
   end
 
-  def update_group(group)
-    dn = "cn=#{group.name},ou=groups,#{@base}"
+  def update_group(local_group)
+    dn = "cn=#{local_group.name},ou=groups,#{@base}"
     ops = [
-      [:replace, :description, group.description]
+      [:replace, :description, local_group.description]
     ]
     @logger.debug("Ready to update #{dn}: #{ops.inspect}")
     if !@conn.modify(dn: dn, operations: ops)
@@ -172,10 +195,6 @@ class Local < Ldap
     ops = [[:add, :memberUid, [user.uid]]]
     @conn.modify(dn: dn, operations: ops)
     @logger.info("Aggiunto #{user.uid} to group #{dn}")
-  end
-
-  def check_user_in_group(user, group)
-    group[:memberUid].include? user.uidNumber
   end
 
   def del_user_from_group(user, group)
@@ -200,23 +219,6 @@ class Local < Ldap
     ops = [[:replace, :title, [title]]]
     @conn.modify(dn: user.dn, operations: ops)
     user
-  end
-
-  # si puo' chiamare con un ADUser o con uid
-  def exists?(user)
-    f = case user
-    when ADUser
-      Net::LDAP::Filter.eq("uid", user.sAMAccountName)
-    when String
-      Net::LDAP::Filter.eq("uid", user)
-    else
-      puts "richiesto #{user.inspect} in formato non corretto"
-      return false
-    end
-    @conn.search(filter: f, attributes: ["uid"]) do |r|
-      return true
-    end
-    false
   end
 
   def delete(dn)
@@ -254,4 +256,4 @@ end
 # this product may be distributed under the terms of
 # the GNU Public License.
 #
-# Librerie per copiare i dati Dsa sull'ldap locale
+# Library to copy AD users to Gnu Ldap
