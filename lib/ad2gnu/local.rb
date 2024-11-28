@@ -90,7 +90,7 @@ class Local < Ldap
   end
 
   def check_user_in_group(user, group)
-    group[:memberUid].include? user.uidNumber
+    group.memberuids.include? user.uidNumber
   end
 
   # si puo' chiamare con un ADUser o con uid
@@ -191,7 +191,7 @@ class Local < Ldap
 
   # TODO check presence
   def add_user_to_group(user, group)
-    dn = group["dn"].first
+    dn = group.dn
     ops = [[:add, :memberUid, [user.uid]]]
     @conn.modify(dn: dn, operations: ops)
     @logger.info("Aggiunto #{user.uid} to group #{dn}")
