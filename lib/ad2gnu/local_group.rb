@@ -27,6 +27,7 @@ class LocalGroup
 
     @description = entry["description"].first
     @gidNumber = entry["gidNumber"].first
+    @memberuids = entry["memberUid"]
 
     self
   end
