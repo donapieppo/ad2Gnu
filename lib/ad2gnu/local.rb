@@ -64,6 +64,15 @@ class Local < Ldap
     nil
   end
 
+  def get_user_by_id(id)
+    f = Net::LDAP::Filter.eq("uidNumber", id) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
+    # iterate but return first
+    @conn.search(filter: f, return_result: false) do |u|
+      return LocalUser.new.fill_from_ldap_res(u)
+    end
+    nil
+  end
+
   def get_dn_from_uid(uid)
     f = Net::LDAP::Filter.eq("uid", uid) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
     @conn.search(filter: f, return_result: false) do |u|
