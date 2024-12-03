@@ -207,12 +207,12 @@ class Local < Ldap
   end
 
   def del_user_from_group(user, group)
-    dn = group["dn"].first
+    @logger.debug("del_user_from_group #{user.inspect}, #{group.inspect}")
     ops = [
       [:delete, :memberUid, [user.uid]]
     ]
-    @conn.modify(dn: dn, operations: ops)
-    @logger.info("Eliminato #{user.uid} to group #{dn}")
+    @conn.modify(dn: group.dn, operations: ops)
+    @logger.info("Eliminato #{user.uid} to group #{group.dn}")
   end
 
   def del_user(user)
