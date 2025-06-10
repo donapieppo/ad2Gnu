@@ -99,7 +99,7 @@ class Local < Ldap
   end
 
   def check_user_in_group(user, group)
-    group.memberuids.include? user.uidNumber
+    group.memberuids.include? user.uid
   end
 
   # si puo' chiamare con un ADUser o con uid
