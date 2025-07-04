@@ -3,7 +3,9 @@
 # di nostra manutenzione
 module AD2Gnu
 class LocalGroup
-  attr_accessor :dn, :cn, :name, :description, :memberuids, :gidNumber
+  attr_accessor :dn, :cn, :name, :description, :memberuids, :gid_number
+
+  alias_method :gidNumber, :gid_number
 
   def initialize(name, description = nil)
     @name = name
@@ -26,7 +28,7 @@ class LocalGroup
     @name = @cn
 
     @description = entry["description"].first
-    @gidNumber = entry["gidNumber"].first
+    @gid_number = entry["gidNumber"].first
     @memberuids = entry["memberUid"]
 
     self

@@ -161,7 +161,7 @@ class Local < Ldap
       sambaSID: [Samba.SidToString(user.object_sid)]
     }
 
-    dati["employeeNumber"] = [user.employeeID] unless user.employeeID == ""
+    dati["employeeNumber"] = [user.employee_id] unless user.employee_id == ""
 
     @logger.debug("Pronto ad aggiungere #{dn}: #{dati.inspect}")
     add(dn, dati)
@@ -171,13 +171,13 @@ class Local < Ldap
   # only local
   def add_group(local_group)
     dn = "cn=#{local_group.name},ou=groups,#{@base}"
-    if !local_group.gidNumber
-      local_group.gidNumber = read_next_gidNumber
+    if !local_group.gid_number
+      local_group.gid_number = read_next_gidNumber
     end
     data = {
       "objectclass" => ["posixGroup"],
       "cn" => [local_group.name],
-      "gidNumber" => [local_group.gidNumber.to_s],
+      "gidNumber" => [local_group.gid_number.to_s],
       "description" => [local_group.description]
     }
     @logger.debug("Redy to create #{dn}: #{data.inspect}")
