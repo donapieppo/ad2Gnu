@@ -52,22 +52,20 @@ class Local < Ldap
     @conn.search(filter: f).map { |ldap_group| LocalGroup.new(ldap_group["cn"].first).fill_from_ldap_res(ldap_group) }
   end
 
-  # get_user("pietro.donatini")
-  # get_user("pietro.donatini@pippo") (the lib does gsub(/@.*/, "")
-  def get_user(name)
-    name = name.gsub(/@.*/, "")
-    f = Net::LDAP::Filter.eq("uid", name) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
+  def get_user_by_filter(f)
     if (u = @conn.search(filter: f).first)
       LocalUser.new.fill_from_ldap_res(u)
     end
   end
 
+  # get_user("pietro.donatini")
+  # get_user("pietro.donatini@pippo") (the lib does gsub(/@.*/, "")
+  def get_user(name)
+    get_user_by_filter(Net::LDAP::Filter.eq("uid", name.gsub(/@.*/, "")) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson"))
+  end
+
   def get_user_by_id(id)
-    f = Net::LDAP::Filter.eq("uidNumber", id) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    # iterate but return first
-    if (u = @conn.search(filter: f).first)
-      LocalUser.new.fill_from_ldap_res(u)
-    end
+    get_user_by_filter(Net::LDAP::Filter.eq("uidNumber", id) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson"))
   end
 
   def get_dn_from_uid(uid)
@@ -147,7 +145,7 @@ class Local < Ldap
       objectclass: ["posixAccount", "shadowAccount", "inetOrgPerson", "sambaSamAccount", "ldapPublicKey"],
       gecos: [gecos_from_description(user.description)],
       description: [user.description],
-      uid: [user.sam_account_name],
+      uid: [uid],
       cn: [user.cn],
       sn: [user.sn],
       givenName: [user.given_name],
@@ -156,7 +154,7 @@ class Local < Ldap
       gidNumber: [@default_gidnumber.to_s],
       mail: [options[:mail] || user.mail],
       shadowExpire: ["90000"],
-      homeDirectory: [options[:home_directory] || (@default_homedir + "/" + user.sam_account_name)],
+      homeDirectory: [options[:home_directory] || (@default_homedir + "/" + uid)],
       sambaDomainName: [samba_domain_name],
       sambaSID: [Samba.SidToString(user.object_sid)]
     }
