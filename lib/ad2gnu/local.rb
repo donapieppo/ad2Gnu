@@ -99,6 +99,16 @@ class Local < Ldap
     nil
   end
 
+  def get_user_groups(uid)
+    f = Net::LDAP::Filter.eq("memberUid", uid) & Net::LDAP::Filter.eq("objectClass", "posixGroup")
+    res = []
+    @conn.search(filter: f, return_result: false) do |g|
+      # return first
+      res << LocalGroup.new(g.cn).fill_from_ldap_res(g)
+    end
+    res
+  end
+
   def check_user_in_group(user, group)
     group.memberuids.include? user.uidNumber
   end

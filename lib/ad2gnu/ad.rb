@@ -3,14 +3,16 @@ class AD < Ldap
   attr_reader :base, :conn
 
   def initialize(domain, conf, logger)
+    @domain = domain
     @conf = conf
     @logger = logger
-    @domain = domain
 
     # usiamo il global catalog a meno di studenti/personale
     # in generale e' chiamato senza domain se non in particolari script che chiedono cose
     # che il global catalog si rifuita di rispondere... mannaggia alui!
     @domain = :gc unless [:studenti, :personale].include?(@domain)
+    # tmp per hpc. FIXME
+    # TODO
     @domain = :personale
 
     @conn = Net::LDAP.new(
