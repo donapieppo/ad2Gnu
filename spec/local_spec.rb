@@ -18,11 +18,11 @@ describe AD2Gnu::Local do
     expect(@ad2gnu.local.get_user("pietro.donatini")).to be_a(AD2Gnu::LocalUser)
   end
 
-  it "#get_dn_from_uid returns pietro.donatini -> uid=pietro.donatini,@base" do
+  it "#get_dn_from_uid pietro.donatini returns uid=pietro.donatini,@base" do
     expect(@ad2gnu.local.get_dn_from_uid("pietro.donatini")).to eq("uid=pietro.donatini,#{@ad2gnu.local.base}")
   end
 
-  it "#get_dn_from_uid for unexistent uid returns pietro.donatini -> nil" do
+  it "#get_dn_from_uid for unexistent uid returns nil" do
     expect(@ad2gnu.local.get_dn_from_uid("pietro.donatini123")).to eq(nil)
   end
 
@@ -30,7 +30,7 @@ describe AD2Gnu::Local do
     expect(@ad2gnu.local.get_dn_from_uidNumber("436108")).to eq("uid=pietro.donatini,#{@ad2gnu.local.base}")
   end
 
-  it "#get_group returns AD2Gnu::LocalGroup" do
+  it "#get_group matematica returns AD2Gnu::LocalGroup" do
     expect(@ad2gnu.local.get_group("matematica")).to be_a(AD2Gnu::LocalGroup)
   end
 
