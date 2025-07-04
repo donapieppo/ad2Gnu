@@ -1,17 +1,19 @@
 module AD2Gnu
 class ADUser
-  attr_accessor :dn, :cn, :sAMAccountName, :sn, :givenName, :employeeID, :userPrincipalName, :mail, :description, :title, :objectSid, :idAnagraficaUnica
+  attr_accessor :dn, :cn, :sam_account_name, :sn, :given_name, :employee_id, :upn, :mail, :description, :title, :object_sid, :id_anagrafica_unica
+
+  alias_method :sAMAccountName, :sam_account_name
+  alias_method :givenName, :given_name
+  alias_method :employeeID, :employee_id
+  alias_method :userPrincipalName, :upn
+  alias_method :objectSid, :object_sid
+  alias_method :idAnagraficaUnica, :id_anagrafica_unica
 
   def self.from_ldap_res(entry)
     entry or return nil
     user = ADUser.new
     user.fill_from_ldap_res(entry)
     user
-  end
-
-  # alias
-  def upn
-    @userPrincipalName
   end
 
   def name
@@ -25,17 +27,17 @@ class ADUser
     @dn = entry["distinguishedName"][0]
     @cn = entry["cn"][0]
 
-    @sAMAccountName = entry["sAMAccountName"].first
+    @sam_account_name = entry["sAMAccountName"].first
     @sn = entry["sn"] ? entry["sn"].first.force_encoding("UTF-8") : " "
-    @givenName = entry["givenName"] ? entry["givenName"].first.force_encoding("UTF-8") : ""
+    @given_name = entry["givenName"] ? entry["givenName"].first.force_encoding("UTF-8") : ""
     # 33845 ma non esiste per assegnisti etc etc
-    @employeeID = entry["employeeID"] ? entry["employeeID"].first.to_s : "0"
+    @employee_id = entry["employeeID"] ? entry["employeeID"].first.to_s : "0"
     # per i preaccreditati può non esistere
     @mail = entry["mail"] ? entry["mail"].first&.force_encoding("UTF-8") : ""
     @title = entry["title"] ? entry["title"][0] : ""    # studente / Cat. D... /
-    @userPrincipalName = entry["userPrincipalName"][0]  # pietro.donatini@personale.dir.unibo.it
-    @objectSid = entry["objectSid"][0]
-    @idAnagraficaUnica = entry["extensionAttribute6"] ? entry["extensionAttribute6"][0] : nil
+    @upn = entry["userPrincipalName"][0]  # pietro.donatini@personale.dir.unibo.it
+    @object_sid = entry["objectSid"][0]
+    @id_anagrafica_unica = entry["extensionAttribute6"] ? entry["extensionAttribute6"][0] : nil
 
     # description non esiste in studenti MAH
     # ci mettiamo il title nel caso :-)

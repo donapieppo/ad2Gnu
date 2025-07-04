@@ -24,11 +24,12 @@ class AD < Ldap
       },
       encryption: :simple_tls
     )
+
+    @group_aliases = {}
   end
 
   # add_group('docenti_matematica', "CN=Str00010.Docenti,OU=Str00010,OU=StrDsa.Dip,DC=personale,DC=dir,DC=unibo,DC=it")
   def add_group_alias(name, path)
-    @group_aliases ||= {}
     @group_aliases[name] = path
   end
 
@@ -81,64 +82,45 @@ class AD < Ldap
   end
 
   # users Hash from ou.membri
-  def get_utenti_da_ou(ou_name)
+  def get_users_from_ou(ou_name)
     res = {}
 
-    leggi_ou(ou_name) or raise "Non trovo #{ou_name}"
-    dn = cn["distinguishedName"][0]
+    ou = read_ou(ou_name) or raise "Non trovo #{ou_name}"
+    dn = ou["distinguishedName"][0]
 
     search("(&(memberOf=#{dn})(objectClass=user))") do |e|
       tmp = ADUser.from_ldap_res(e)
-      res[tmp.cn] = tmp
+      res[tmp.sAMAccountName] = tmp
     end
 
     res
   end
 
   # users Hash from da cn.membri
-  def get_utenti_da_cn(cn_name)
+  def get_users_from_cn(cn_name)
     res = {}
 
-    cn = leggi_cn(cn_name) or raise "Non trovo #{cn_name}"
+    cn = read_cn(cn_name) or raise "Non trovo #{cn_name}"
     dn = cn["distinguishedName"][0]
 
     search("(&(memberOf=#{dn})(objectClass=user))") do |e|
       tmp = ADUser.from_ldap_res(e)
-      res[tmp.cn] = tmp
+      res[tmp.sAMAccountName] = tmp
     end
 
     res
   end
 
-  # Hash di ADUser da ou.StudentiAttivi (o membri se non funziona...)
-  # Hash con kiave user.cn
-  def each_personale_di_cn(cn)
-    gruppo = leggi_cn("#{cn}.Membri") or raise "Non trovo #{cn}"
-    dn = gruppo["distinguishedName"][0]
+  # each_member_from_cn("pippo")
+  # each_member_from_cn("pippo", "StudentiAttivi")
+  def each_member_from_cn(cn, attr = "Membri")
+    cn = read_cn("#{cn}.#{attr}") or raise "Non trovo #{cn}"
+    dn = cn["distinguishedName"][0]
 
-    @logger.debug("Trovato gruppo: #{gruppo.inspect} e \ndn: #{dn}\n\n")
+    @logger.debug("Found grup #{cn.inspect}\ndn: #{dn}\n")
 
     search("(&(memberOf=#{dn})(objectClass=user))") do |e|
       yield(ADUser.from_ldap_res(e))
-    end
-  end
-
-  # Hash di ADUser da ou.StudentiAttivi (o membri se non funziona...)
-  # Hash con kiave user.cn
-  def each_studente_attivo_di_ou(ou)
-    # CN=Cdl1601.069.StudentiAttivi,OU=Cdl1601.069,OU=Fac0016,DC=studenti,DC=dir,DC=unibo,DC=it
-    gruppo = leggi_cn("#{ou}.StudentiAttivi") or raise "Non trovo StudentiAttivi in #{ou}"
-    dn = gruppo['distinguishedName'][0]
-
-    @logger.debug("Trovato gruppo: #{gruppo.inspect} e \ndn: #{dn}\n\n")
-
-    search("(&(memberOf=#{dn})(objectClass=user))") do |e|
-      begin
-        yield(ADUser.from_ldap_res(e))
-      rescue NoIdAnagraficaUnicaError => e
-        puts "NO ID ANAGRAFICA"
-        puts e
-      end
     end
   end
 

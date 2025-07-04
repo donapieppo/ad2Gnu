@@ -19,11 +19,12 @@ class Local < Ldap
       },
       encryption: :simple_tls
     )
+
+    @group_aliases = {}
   end
 
   # add_group_alias('docenti_matematica', "mat-doc")
   def add_group_alias(name, path)
-    @group_aliases ||= {}
     @group_aliases[name] = path
   end
 

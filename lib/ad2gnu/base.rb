@@ -8,13 +8,14 @@ class Base
     @logger = logger || Logger.new($stdout)
   end
 
-  def AD_login
+  def ad_login
     @ad = AD.new(@domain, @conf.ad, @logger)
     @conf.groups.each do |k, v|
       @ad.add_group_alias(k, v["ad"]) if v["ad"]
     end
     self
   end
+  alias_method :AD_login, :ad_login
 
   def local_login
     @local = Local.new(@conf.ldap, @logger)
@@ -26,7 +27,7 @@ class Base
     self
   end
 
-  def copia_cn(cn)
+  def copy_cn(cn)
     e = @ad.leggi_cn(cn)
 
     # FIXME non sempre esiste description :-(
@@ -49,8 +50,9 @@ class Base
     @logger.info("Aggiunta cn=#{cn} (#{description})")
     self
   end
+  alias_method :copia_cn, :copy_cn
 
-  def copia_ou(ou)
+  def copy_ou(ou)
     e = @ad.leggi_ou(ou)
 
     # FIXME non sempre esiste description :-(
@@ -69,6 +71,7 @@ class Base
     @logger.info("Aggiunta ou=#{ou} (#{description})")
     self
   end
+  alias_method :copia_ou, :copy_ou
 end
 end
 
