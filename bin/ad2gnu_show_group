@@ -1,13 +1,12 @@
 #!/usr/bin/env ruby
 
-require 'pp'
-require 'ad2gnu'
+require "ad2gnu"
 
 g = ARGV[0] or raise "dammi group"
 
-linuxdsa = AD2Gnu::Base.new()
+ad2gnu = AD2Gnu::Base.new()
 
 f = Net::LDAP::Filter.eq("ou", g)
-linuxdsa.AD_login.ad.conn.search(filter: f) do |ou|
+ad2gnu.AD_login.ad.conn.search(filter: f) do |ou|
   pp ou
 end

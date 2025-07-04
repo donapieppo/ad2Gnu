@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require "pp"
 require "ad2gnu"
 
 g = ARGV[0] or raise "Give group name"

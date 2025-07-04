@@ -2,10 +2,14 @@
 
 require "ad2gnu"
 
-linuxdsa = AD2Gnu::Base.new()
+uid = ARGV[0]
+key = ARGV[1]
 
-local = linuxdsa.local_login.local
-u = local.get_user("pietro.donatini")
-ops = [[:replace, :sshPublicKey, ["poepeope", "plu"]]]
-local.conn.modify(dn: u.dn, operations: ops)
+ad2gnu = AD2Gnu::Base.new.local_login
+
+user = ad2gnu.local.get_user(uid)
+
+# ops = [[:replace, :sshPublicKey, [, "plu"]]]
+ops = [[:add, :sshPublicKey, key]]
+ad2gnu.local.conn.modify(dn: user.dn, operations: ops)
 
