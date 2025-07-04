@@ -110,7 +110,7 @@ class Local < Ldap
   end
 
   def check_user_in_group(user, group)
-    group.memberuids.include? user.uidNumber
+    group.memberuids.include? user.uid
   end
 
   # si puo' chiamare con un ADUser o con uid
@@ -135,7 +135,7 @@ class Local < Ldap
   # lo prendiamo e lo trasformiamo da 'description' che e' un utf-8
   def add_user(user, options = {})
     # ex cn=Pin0610239
-    uid = user.sAMAccountName
+    uid = user.sam_account_name
     dn = "uid=#{uid},#{@base}"
 
     # uidNumber da assegnare e' conservato nell'utente nextuser in dc=linuxdsa. si veda
@@ -150,9 +150,9 @@ class Local < Ldap
     # a quale DOMINIO KERBEROS (per comodita' di ldap schema uso sambaDomainName) ci dobbiamo
     # l'utente in questione appartiene
 
-    samba_domain_name = (user.userPrincipalName =~ /@studio\.unibo\.it/) ? "STUDENTI.DIR.UNIBO.IT" : "PERSONALE.DIR.UNIBO.IT"
+    samba_domain_name = (user.upn =~ /@studio\.unibo\.it/) ? "STUDENTI.DIR.UNIBO.IT" : "PERSONALE.DIR.UNIBO.IT"
 
-    if !(user.idAnagraficaUnica || options[:uidNumber])
+    if !(user.id_anagrafica_unica || options[:uid_number])
       raise NoIdAnagraficaUnicaError, "Manca id anagrafica unica a #{user.inspect}"
     end
 
@@ -161,18 +161,18 @@ class Local < Ldap
       objectclass: ["posixAccount", "shadowAccount", "inetOrgPerson", "sambaSamAccount", "ldapPublicKey"],
       gecos: [gecos_from_description(user.description)],
       description: [user.description],
-      uid: [user.sAMAccountName],
+      uid: [user.sam_account_name],
       cn: [user.cn],
       sn: [user.sn],
-      givenName: [user.givenName],
+      givenName: [user.given_name],
       loginShell: ["/bin/bash"],
-      uidNumber: [options[:uidNumber] ? options[:uidNumber].to_s : user.idAnagraficaUnica.to_s],
+      uidNumber: [options[:uid_number] ? options[:uid_number].to_s : user.id_anagrafica_unica.to_s],
       gidNumber: [@default_gidnumber.to_s],
       mail: [options[:mail] || user.mail],
       shadowExpire: ["90000"],
-      homeDirectory: [options[:homeDirectory] || (@default_homedir + "/" + user.sAMAccountName)],
+      homeDirectory: [options[:home_directory] || (@default_homedir + "/" + user.sam_account_name)],
       sambaDomainName: [samba_domain_name],
-      sambaSID: [Samba.SidToString(user.objectSid)]
+      sambaSID: [Samba.SidToString(user.object_sid)]
     }
 
     dati["employeeNumber"] = [user.employeeID] unless user.employeeID == ""
