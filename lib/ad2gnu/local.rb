@@ -42,7 +42,6 @@ class Local < Ldap
     end
   end
 
-  # example ad2gnu.local.each_user.map(&:uid)
   def users
     f = Net::LDAP::Filter.eq("uid", "*") & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
     @conn.search(filter: f).map { |ldap_user| LocalUser.new.fill_from_ldap_res(ldap_user) }
@@ -58,55 +57,45 @@ class Local < Ldap
   def get_user(name)
     name = name.gsub(/@.*/, "")
     f = Net::LDAP::Filter.eq("uid", name) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    # iterate but return first
-    @conn.search(filter: f, return_result: false) do |u|
-      return LocalUser.new.fill_from_ldap_res(u)
+    if (u = @conn.search(filter: f).first)
+      LocalUser.new.fill_from_ldap_res(u)
     end
-    nil
   end
 
   def get_user_by_id(id)
     f = Net::LDAP::Filter.eq("uidNumber", id) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
     # iterate but return first
-    @conn.search(filter: f, return_result: false) do |u|
-      return LocalUser.new.fill_from_ldap_res(u)
+    if (u = @conn.search(filter: f).first)
+      LocalUser.new.fill_from_ldap_res(u)
     end
-    nil
   end
 
   def get_dn_from_uid(uid)
     f = Net::LDAP::Filter.eq("uid", uid) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    @conn.search(filter: f, return_result: false) do |u|
-      return u["dn"][0]
+    if (u = @conn.search(filter: f).first)
+      u["dn"][0]
     end
-    nil
   end
 
   def get_dn_from_uidNumber(uid_number)
     f = Net::LDAP::Filter.eq("uidNumber", uid_number) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    @conn.search(filter: f, return_result: false) do |u|
-      return u["dn"][0]
+    if (u = @conn.search(filter: f).first)
+      u["dn"][0]
     end
-    nil
   end
 
   def get_group(cn)
     f = Net::LDAP::Filter.eq("cn", cn) & Net::LDAP::Filter.eq("objectClass", "posixGroup")
-    @conn.search(filter: f, return_result: false) do |g|
-      # return first
-      return LocalGroup.new(cn).fill_from_ldap_res(g)
+    if (g = @conn.search(filter: f).first)
+      LocalGroup.new(cn).fill_from_ldap_res(g)
     end
-    nil
   end
 
   def get_user_groups(uid)
     f = Net::LDAP::Filter.eq("memberUid", uid) & Net::LDAP::Filter.eq("objectClass", "posixGroup")
-    res = []
-    @conn.search(filter: f, return_result: false) do |g|
-      # return first
-      res << LocalGroup.new(g.cn).fill_from_ldap_res(g)
+    @conn.search(filter: f).map do |g|
+      LocalGroup.new(g.cn).fill_from_ldap_res(g)
     end
-    res
   end
 
   def check_user_in_group(user, group)
@@ -117,17 +106,14 @@ class Local < Ldap
   def exists?(user)
     f = case user
     when ADUser
-      Net::LDAP::Filter.eq("uid", user.sAMAccountName)
+      Net::LDAP::Filter.eq("uid", user.sam_account_name)
     when String
       Net::LDAP::Filter.eq("uid", user)
     else
       puts "richiesto #{user.inspect} in formato non corretto"
       return false
     end
-    @conn.search(filter: f, attributes: ["uid"]) do |r|
-      return true
-    end
-    false
+    !@conn.search(filter: f, attributes: ["uid"]).empty?
   end
 
   # ricorda che il gecos e' solo in caratteri IA5, che consiste di acii
