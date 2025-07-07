@@ -1,5 +1,6 @@
 # AD2Gnu
-a library (ruby gem) and some scripts to copy Active Diretory accounts to openldap accounts.
+
+A library (ruby gem) and some scripts to copy Active Diretory accounts to openldap accounts.
 
 ## Why
 
@@ -7,7 +8,7 @@ With large AD installation (a campus for example) ad2gnu permit to
 provide a smaller set of accounts via openldap.
 
   - the account in openldap is a copy of AD account
-  - the account in openldap does not have a password but the authetication can be provided by kerberos pam module
+  - the account in openldap does not have a password but the authetication can be provided by kerberos pam module or ssh authorized keys
   - the account in openldap permits a single uidNumber/gidNumber for user
 
 ## Working example with Docker
@@ -20,17 +21,19 @@ On clients you need only ca.crt.
 ```bash
 cd ./docker/etc/certs
 
+# Certification authority
 openssl dhparam -out dhparam.pem 2048
 openssl req -subj "/C=IT/ST=Italy/L=Bologna/O=Dipartimento di Matematica/OU=Certification Authority/CN=CA dm.unibo.it/emailAddress=dipmat-supportoweb@unibo.it" -days 4000 -new -newkey rsa:2048 -sha1 -x509 -keyout ca.key -out ca.crt
 openssl x509 -noout -text -in ca.crt
+# Ldap server cert
 openssl req -nodes -new -newkey rsa:2048 -out ldap1.csr -keyout ldap1.key -subj "/C=IT/ST=Italy/L=Bologna/O=Dipartimento di Matematica/OU=Ldap Servers/CN=ldap1.dm.unibo.it/emailAddress=dipmat-supportoweb@unibo.it"
 openssl x509 -req -in ldap1.csr -out ldap1.cert -CA ca.crt -CAkey ca.key -CAcreateserial -days 4000
 ```
 
-The server comes from [https://github.com/osixia/docker-openldap] 
+The server comes from [osixia/docker-openlda](https://github.com/osixia/docker-openldap)
 (if you build from scratch remember to add samba.schema).
 
-Edit configurations: ``docker-compose.yml`` for environment variables and then ``doc/docker_ad2gnu.yml`` and ``doc/docker_ldap.conf``.
+Edit configurations: `docker-compose.yml` for environment variables and then `doc/docker_ad2gnu.yml` and `doc/docker_ldap.conf`.
 Then:
 
 ```bash
