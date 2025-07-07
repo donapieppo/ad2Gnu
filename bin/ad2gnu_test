@@ -8,6 +8,12 @@ ad2gnu = AD2Gnu::Base.new.local_login
 # pp linuxdsa.AD_login.ad.get_user_by_upn("pietro.donatini@unibo.it")
 # pp linuxdsa.AD_login.ad.get_user_by_cn("Mat033845")
 
+p group = ad2gnu.local.get_group("chimica")
+p ad2gnu.local.read_next_gidNumber
+
+exit 
+
+
 user = ad2gnu.local.get_user("nicola.arcozzi")
 group = ad2gnu.local.get_group("pippo")
 p group["memberUid"].include? user.uidNumber
