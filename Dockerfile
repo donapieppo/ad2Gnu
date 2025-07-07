@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bookworm
 MAINTAINER Donapieppo <donapieppo@yahoo.it>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -24,7 +24,4 @@ CMD ["/bin/bash"]
 
 # gem build ad2gnu.gemspec 
 # gem install ad2gnu
-
-
-
 
