@@ -233,10 +233,10 @@ class Local < Ldap
   def read_next_gidNumber
     filter = Net::LDAP::Filter.eq("objectClass", "posixGroup")
     last = @conn.search(filter: filter).map { |res| res["gidNumber"].first.to_i }.max
-    last ? last + 1 : default_gidnumber
+    last ? [default_gidnumber, last + 1].max : default_gidnumber
   end
 
-  def leggi_next_uidNumber
+  def read_next_uidNumber
     e = @conn.search2("dc=linuxdsa,#{@base}", LDAP::LDAP_SCOPE_ONELEVEL, "cn=nextuser", ["uidNumber"])
     (e == []) and raise "Manca c=nextuser. Hai installato lo schema linuxdsa?"
     e[0]["uidNumber"][0].to_i
