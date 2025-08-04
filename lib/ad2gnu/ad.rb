@@ -11,9 +11,6 @@ class AD < Ldap
     # in generale e' chiamato senza domain se non in particolari script che chiedono cose
     # che il global catalog si rifuita di rispondere... mannaggia alui!
     @domain = :gc unless [:studenti, :personale].include?(@domain)
-    # tmp per hpc. FIXME
-    # TODO
-    @domain = :personale
 
     @conn = Net::LDAP.new(
       host: conf[@domain.to_s]["host"],
@@ -66,6 +63,7 @@ class AD < Ldap
       search(f) do |u|
         return ADUser.from_ldap_res(u)
       end
+      nil
     end
   end
 
