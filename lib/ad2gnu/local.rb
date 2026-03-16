@@ -53,7 +53,7 @@ class Local < Ldap
   end
 
   def get_user_by_filter(f)
-    if (u = @conn.search(filter: f).first)
+    if (u = @conn.search(filter: f)&.first)
       LocalUser.new.fill_from_ldap_res(u)
     end
   end
@@ -70,21 +70,21 @@ class Local < Ldap
 
   def get_dn_from_uid(uid)
     f = Net::LDAP::Filter.eq("uid", uid) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    if (u = @conn.search(filter: f).first)
+    if (u = @conn.search(filter: f)&.first)
       u["dn"][0]
     end
   end
 
   def get_dn_from_uidNumber(uid_number)
     f = Net::LDAP::Filter.eq("uidNumber", uid_number) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    if (u = @conn.search(filter: f).first)
+    if (u = @conn.search(filter: f)&.first)
       u["dn"][0]
     end
   end
 
   def get_group(cn)
     f = Net::LDAP::Filter.eq("cn", cn) & Net::LDAP::Filter.eq("objectClass", "posixGroup")
-    if (g = @conn.search(filter: f).first)
+    if (g = @conn.search(filter: f)&.first)
       LocalGroup.new(cn).fill_from_ldap_res(g)
     end
   end
