@@ -1,7 +1,7 @@
 module AD2Gnu
 class Local < Ldap
   attr_reader :base, :conn
-  attr_accessor :default_gidnumber, :default_homedir
+  attr_accessor :default_gidnumber, :start_gidnumber, :default_homedir
 
   def initialize(conf, logger)
     @conf = conf
@@ -233,7 +233,7 @@ class Local < Ldap
   def read_next_gidNumber
     filter = Net::LDAP::Filter.eq("objectClass", "posixGroup")
     last = @conn.search(filter: filter)&.map { |res| res["gidNumber"].first.to_i }.max
-    last ? [default_gidnumber, last + 1].max : default_gidnumber
+    last ? (last + 1) : (@start_gidnumber || 2000)
   end
 
   def read_next_uidNumber
