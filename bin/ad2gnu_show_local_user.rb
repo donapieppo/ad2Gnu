@@ -4,9 +4,9 @@ require "ad2gnu"
 
 uid = ARGV[0] or raise "dammi upn (ex: pietro.donatini)"
 
-ad2gnu = AD2Gnu::Base.new()
+ad2gnu_local = AD2Gnu::Base.new.local_login.local
 
 filter = Net::LDAP::Filter.eq("uid", uid)
-ad2gnu.local_login.local.conn.search(filter: filter) do |u|
+ad2gnu_local.conn.search(filter: filter) do |u|
   pp u
 end
