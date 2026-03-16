@@ -44,12 +44,12 @@ class Local < Ldap
 
   def users
     f = Net::LDAP::Filter.eq("uid", "*") & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    @conn.search(filter: f).map { |ldap_user| LocalUser.new.fill_from_ldap_res(ldap_user) }
+    @conn.search(filter: f)&.map { |ldap_user| LocalUser.new.fill_from_ldap_res(ldap_user) }
   end
 
   def groups
     f = Net::LDAP::Filter.eq("cn", "*") & Net::LDAP::Filter.eq("objectClass", "posixGroup")
-    @conn.search(filter: f).map { |ldap_group| LocalGroup.new(ldap_group["cn"].first).fill_from_ldap_res(ldap_group) }
+    @conn.search(filter: f)&.map { |ldap_group| LocalGroup.new(ldap_group["cn"].first).fill_from_ldap_res(ldap_group) }
   end
 
   def get_user_by_filter(f)
@@ -70,14 +70,14 @@ class Local < Ldap
 
   def get_dn_from_uid(uid)
     f = Net::LDAP::Filter.eq("uid", uid) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    if (u = @conn.search(filter: f)&.first)
+    if (u = @conn.search(filter: f).first)
       u["dn"][0]
     end
   end
 
   def get_dn_from_uidNumber(uid_number)
     f = Net::LDAP::Filter.eq("uidNumber", uid_number) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
-    if (u = @conn.search(filter: f)&.first)
+    if (u = @conn.search(filter: f).first)
       u["dn"][0]
     end
   end
@@ -232,7 +232,7 @@ class Local < Ldap
   # sperando siano pochi :-)
   def read_next_gidNumber
     filter = Net::LDAP::Filter.eq("objectClass", "posixGroup")
-    last = @conn.search(filter: filter).map { |res| res["gidNumber"].first.to_i }.max
+    last = @conn.search(filter: filter)&.map { |res| res["gidNumber"].first.to_i }.max
     last ? [default_gidnumber, last + 1].max : default_gidnumber
   end
 
