@@ -19,8 +19,9 @@ class Base
 
   def local_login
     @local = Local.new(@conf.ldap, @logger)
-    @local.default_gidnumber = @conf.account["gidnumber"] || 10000
+    @local.default_gidnumber = @conf.account["default_gidnumber"] || 10000
     @local.default_homedir = @conf.account["homedir"] || "/home"
+    @local.start_gidnumber = @conf.group["start_gidnumber"] || 2000
     @conf.groups.each do |k, v|
       @local.add_group_alias(k, v["local"]) if v["local"]
     end
