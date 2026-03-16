@@ -2,7 +2,11 @@
 
 require "ad2gnu"
 
-ad2gnu = AD2Gnu::Base.new.local_login
+
+ad2gnu = AD2Gnu::Base.new(:gc).ad_login
+p ad2gnu.ad.get_user_by_sam("valeria.montesi3")
+
+exit
 
 # pp linuxdsa.AD_login.ad.get_user_by_id(574599)
 # pp linuxdsa.AD_login.ad.get_user_by_upn("pietro.donatini@unibo.it")

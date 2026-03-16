@@ -4,9 +4,6 @@ require "ad2gnu"
 
 g = ARGV[0] or raise "Give group name"
 
-ad2gnu = AD2Gnu::Base.new()
+ad2gnu = AD2Gnu::Base.new.local_login
 
-filter = Net::LDAP::Filter.eq("cn", g)
-ad2gnu.local_login.local.conn.search(filter: filter) do |x|
-  pp x
-end
+pp ad2gnu.local.get_group(g)

@@ -18,4 +18,5 @@ puts "MODIFICO in #{group} #{attr.to_sym} => #{value}"
 
 $stdin.gets
 
-ad2gnu.local.conn.modify(dn: group.dn, operations: [[:replace, attr.to_sym, [value.to_s]]])
+ops = [[:replace, attr.to_sym, [value.to_s]]]
+ad2gnu.local.conn.modify(dn: group.dn, operations: ops)
