@@ -29,14 +29,13 @@ class Base
   end
 
   def copy_cn(cn)
-    e = @ad.leggi_cn(cn)
+    e = @ad.read_cn(cn)
 
     # FIXME non sempre esiste description :-(
     displayname = e["displayName"] ? e["displayName"][0] : ""
     description = e["description"] ? e["description"][0] : displayname
 
     dn = e["distinguishedName"][0]
-    @local.verifica_base(dn)
 
     @logger.debug("Aggiungo in locale dn=#{dn}, description=#{description}, cn=#{cn}")
 
@@ -54,14 +53,13 @@ class Base
   alias_method :copia_cn, :copy_cn
 
   def copy_ou(ou)
-    e = @ad.leggi_ou(ou)
+    e = @ad.read_ou(ou)
 
     # FIXME non sempre esiste description :-(
     displayname = e["displayName"] ? e["displayName"][0] : "Undefined"
     description = e["description"] ? e["description"][0] : displayname
 
     dn = e["distinguishedName"][0]
-    @local.verifica_base(dn)
 
     @logger.debug("Aggiungo in locale dn=#{dn}, description=#{description}, ou=#{ou}")
 
