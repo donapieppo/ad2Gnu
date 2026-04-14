@@ -18,7 +18,7 @@ services:
       LDAP_RFC2307BIS_SCHEMA: "false"
       LDAP_BACKEND: "mdb"
       LDAP_TLS: "true"
-      LDAP_TLS_CRT_FILENAME: "ldap1.crt"
+      LDAP_TLS_CRT_FILENAME: "ldap1.pem"
       LDAP_TLS_KEY_FILENAME: "ldap1.key"
       LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
       LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
