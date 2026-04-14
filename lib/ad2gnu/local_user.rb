@@ -20,7 +20,7 @@ class LocalUser
     # questi sempre
     # dn = CN=Mat033845,OU=Str00010,DC=personale,DC=dir,DC=unibo,DC=it
     # cn = Mat033845
-    @dn = entry["dn"].first
+    @dn = entry.dn
     @cn = entry["cn"].first
 
     @gecos = entry["gecos"].first
