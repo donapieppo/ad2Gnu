@@ -31,7 +31,7 @@ class Local < Ldap
   # non ci poniamo problemi se esiste già
   def add(dn, hash)
     if @conn.add(dn: dn, attributes: hash)
-      @logger.info("Creato #{hash["description"]} con dn: #{dn}")
+      @logger.info("Created #{hash["description"]} with dn: #{dn}")
     else
       e = @conn.get_operation_result
       if e.message == "Entry Already Exists"
@@ -71,14 +71,14 @@ class Local < Ldap
   def get_dn_from_uid(uid)
     f = Net::LDAP::Filter.eq("uid", uid) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
     if (u = @conn.search(filter: f).first)
-      u["dn"][0]
+      u.dn
     end
   end
 
   def get_dn_from_uidNumber(uid_number)
     f = Net::LDAP::Filter.eq("uidNumber", uid_number) & Net::LDAP::Filter.eq("objectClass", "inetOrgPerson")
     if (u = @conn.search(filter: f).first)
-      u["dn"][0]
+      u.dn
     end
   end
 
@@ -92,7 +92,7 @@ class Local < Ldap
   def get_user_groups(uid)
     f = Net::LDAP::Filter.eq("memberUid", uid) & Net::LDAP::Filter.eq("objectClass", "posixGroup")
     @conn.search(filter: f).map do |g|
-      LocalGroup.new(g.cn).fill_from_ldap_res(g)
+      LocalGroup.new(g["cn"].first).fill_from_ldap_res(g)
     end
   end
 
@@ -237,15 +237,20 @@ class Local < Ldap
   end
 
   def read_next_uidNumber
-    e = @conn.search2("dc=linuxdsa,#{@base}", LDAP::LDAP_SCOPE_ONELEVEL, "cn=nextuser", ["uidNumber"])
-    (e == []) and raise "Manca c=nextuser. Hai installato lo schema linuxdsa?"
-    e[0]["uidNumber"][0].to_i
+    entries = @conn.search(
+      base: "dc=linuxdsa,#{@base}",
+      scope: Net::LDAP::SearchScope_SingleLevel,
+      filter: Net::LDAP::Filter.eq("cn", "nextuser"),
+      attributes: ["uidNumber"]
+    )
+    (entries.nil? || entries.empty?) and raise "Manca c=nextuser. Hai installato lo schema linuxdsa?"
+    entries.first["uidNumber"].first.to_i
   end
 
   def update_next_uidNumber
-    number = leggi_next_uidNumber.to_i + 1
-    @conn.modify("cn=nextuser,dc=linuxdsa,#{@base}", {uidNumber: [number.to_s]})
-    @conn.perror("modify")
+    number = read_next_uidNumber + 1
+    ops = [[:replace, :uidNumber, [number.to_s]]]
+    @conn.modify(dn: "cn=nextuser,dc=linuxdsa,#{@base}", operations: ops)
   end
 
   # gecos e' ascii
