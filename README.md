@@ -27,7 +27,7 @@ openssl req -subj "/C=IT/ST=Italy/L=Bologna/O=Dipartimento di Matematica/OU=Cert
 openssl x509 -noout -text -in ca.crt
 # Ldap server cert
 openssl req -nodes -new -newkey rsa:2048 -out ldap1.csr -keyout ldap1.key -subj "/C=IT/ST=Italy/L=Bologna/O=Dipartimento di Matematica/OU=Ldap Servers/CN=ldap1.dm.unibo.it/emailAddress=dipmat-supportoweb@unibo.it"
-openssl x509 -req -in ldap1.csr -out ldap1.cert -CA ca.crt -CAkey ca.key -CAcreateserial -days 4000
+openssl x509 -req -in ldap1.csr -out ldap1.pem -CA ca.crt -CAkey ca.key -CAcreateserial -days 4000
 ```
 
 The server comes from [osixia/docker-openlda](https://github.com/osixia/docker-openldap)
