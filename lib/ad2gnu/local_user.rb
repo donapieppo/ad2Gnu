@@ -41,5 +41,9 @@ class LocalUser
 
     self
   end
+
+  def to_s
+    @uid
+  end
 end
 end
