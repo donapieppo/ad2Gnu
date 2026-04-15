@@ -14,8 +14,8 @@ class Local < Ldap
       base: @base,
       auth: {
         method: :simple,
-        username: ENV["LOCAL_LDAP_USERNAME"] || conf["username"],
-        password: ENV["LOCAL_LDAP_PASSWORD"] || conf["password"]
+        username: conf["username"] || ENV["LOCAL_LDAP_USERNAME"],
+        password: conf["password"] || ENV["LOCAL_LDAP_PASSWORD"]
       },
       encryption: :simple_tls
     )
