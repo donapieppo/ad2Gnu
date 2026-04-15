@@ -137,7 +137,7 @@ class Local < Ldap
     samba_domain_name = (user.upn =~ /@studio\.unibo\.it/) ? "STUDENTI.DIR.UNIBO.IT" : "PERSONALE.DIR.UNIBO.IT"
 
     if !(user.id_anagrafica_unica || options[:uid_number])
-      raise NoIdAnagraficaUnicaError, "Manca id anagrafica unica a #{user.inspect}"
+      raise NoIdAnagraficaUnicaError, "Missing id anagrafica unica in #{user.inspect}"
     end
 
     # eventualmente 'dsaAccount'
@@ -161,7 +161,7 @@ class Local < Ldap
 
     dati["employeeNumber"] = [user.employee_id] unless user.employee_id == ""
 
-    @logger.debug("Pronto ad aggiungere #{dn}: #{dati.inspect}")
+    @logger.debug("Ready to add #{dn}: #{dati.inspect}")
     add(dn, dati)
   end
 
@@ -198,7 +198,7 @@ class Local < Ldap
     dn = group.dn
     ops = [[:add, :memberUid, [user.uid]]]
     @conn.modify(dn: dn, operations: ops)
-    @logger.info("Aggiunto #{user.uid} to group #{dn}")
+    @logger.info("Added #{user.uid} to group #{dn}")
   end
 
   def del_user_from_group(user, group)
@@ -207,7 +207,7 @@ class Local < Ldap
       [:delete, :memberUid, [user.uid]]
     ]
     @conn.modify(dn: group.dn, operations: ops)
-    @logger.info("Eliminato #{user.uid} to group #{group.dn}")
+    @logger.info("Deleted #{user.uid} from group #{group.dn}")
   end
 
   def del_user(user)

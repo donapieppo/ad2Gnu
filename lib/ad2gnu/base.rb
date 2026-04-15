@@ -37,7 +37,7 @@ class Base
 
     dn = e["distinguishedName"][0]
 
-    @logger.debug("Aggiungo in locale dn=#{dn}, description=#{description}, cn=#{cn}")
+    @logger.debug("Adding in locale dn=#{dn}, description=#{description}, cn=#{cn}")
 
     # prendiamo gli objectclass dal cesia gia' che ci siamo
     # per esempio in CN=PreAccreditati2006 ha top e container
@@ -47,7 +47,7 @@ class Base
                     "description" => [description],
                     "cn" => [cn]})
 
-    @logger.info("Aggiunta cn=#{cn} (#{description})")
+    @logger.info("Added cn=#{cn} (#{description})")
     self
   end
   alias_method :copia_cn, :copy_cn
@@ -61,13 +61,13 @@ class Base
 
     dn = e["distinguishedName"][0]
 
-    @logger.debug("Aggiungo in locale dn=#{dn}, description=#{description}, ou=#{ou}")
+    @logger.debug("Adding in locale dn=#{dn}, description=#{description}, ou=#{ou}")
 
     @local.add(dn, {"objectclass" => ["top", "organizationalUnit"],
                     "description" => [description],
                     "ou"          => [ou]})
 
-    @logger.info("Aggiunta ou=#{ou} (#{description})")
+    @logger.info("Added ou=#{ou} (#{description})")
     self
   end
   alias_method :copia_ou, :copy_ou
