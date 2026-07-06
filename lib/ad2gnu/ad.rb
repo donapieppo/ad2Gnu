@@ -11,6 +11,8 @@ class AD < Ldap
     # in generale e' chiamato senza domain se non in particolari script che chiedono cose
     # che il global catalog si rifuita di rispondere... mannaggia alui!
     @domain = :gc unless [:studenti, :personale].include?(@domain)
+    username = ENV["AD_LDAP_USERNAME"] || conf["username"]
+    password = ENV["AD_LDAP_PASSWORD"] || conf["password"]
 
     @conn = Net::LDAP.new(
       host: conf[@domain.to_s]["host"],
@@ -18,11 +20,16 @@ class AD < Ldap
       base: conf[@domain.to_s]["base"],
       auth: {
         method: :simple,
-        username: ENV["AD_LDAP_USERNAME"] || conf["username"],
-        password: ENV["AD_LDAP_PASSWORD"] || conf["password"]
+        username: username,
+        password: password
       },
       encryption: :simple_tls
     )
+
+    unless @conn.bind
+      e = @conn.get_operation_result
+      raise AD2Gnu::ResultError, "AD: LDAP bind failed for #{@domain} as #{username.inspect}: #{e.inspect}"
+    end
 
     @group_aliases = {}
   end

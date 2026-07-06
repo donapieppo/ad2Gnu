@@ -7,6 +7,8 @@ class Local < Ldap
     @conf = conf
     @logger = logger
     @base = conf["base"]
+    username = ENV["LOCAL_LDAP_USERNAME"] || conf["username"]
+    password = ENV["LOCAL_LDAP_PASSWORD"] || conf["password"]
 
     @conn = Net::LDAP.new(
       host: conf["host"],
@@ -14,11 +16,16 @@ class Local < Ldap
       base: @base,
       auth: {
         method: :simple,
-        username: ENV["LOCAL_LDAP_USERNAME"] || conf["username"],
-        password: ENV["LOCAL_LDAP_PASSWORD"] || conf["password"]
+        username: username,
+        password: password
       },
       encryption: :simple_tls
     )
+
+    unless @conn.bind
+      e = @conn.get_operation_result
+      raise AD2Gnu::ResultError, "Local: LDAP bind failed for #{username.inspect}: #{e.inspect}"
+    end
 
     @group_aliases = {}
   end
