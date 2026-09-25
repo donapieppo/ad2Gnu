@@ -75,7 +75,7 @@ end
 end
 
 #
-# Copyright (c) Pietro Donatini, 2006-2024.
+# Copyright (c) Pietro Donatini, 2006-2026.
 #
 # this product may be distributed under the terms of
 # the GNU Public License.

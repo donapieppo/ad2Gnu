@@ -27,3 +27,10 @@ class Ldap
   alias_method :leggi_cn, :read_cn
 end
 end
+
+# Copyright (c) Pietro Donatini, 2006-2026.
+#
+# this product may be distributed under the terms of
+# the GNU Public License.
+#
+# Librerie per copiare i dati Dsa sull'ldap locale

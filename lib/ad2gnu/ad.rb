@@ -151,7 +151,7 @@ end
 # memberOf: CN=Cdl0099.StudentiAttivi,OU=Cdl0099,OU=Fac0016,DC=studenti,DC=dir,DC=unibo,DC=it
 #
 #
-# Copyright (c) Pietro Donatini, 2006 - 2009
+# Copyright (c) Pietro Donatini, 2006-2026.
 #
 # this product may be distributed under the terms of
 # the GNU Public License.
