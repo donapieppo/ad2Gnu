@@ -1,6 +1,6 @@
 module AD2Gnu
 class ADUser
-  attr_accessor :dn, :cn, :sam_account_name, :sn, :given_name, :employee_id, :upn, :mail, :description, :title, :object_sid, :id_anagrafica_unica
+  attr_accessor :dn, :cn, :sam_account_name, :sn, :given_name, :employee_id, :upn, :mail, :description, :title, :object_sid, :id_anagrafica_unica, :disabled
 
   alias_method :sAMAccountName, :sam_account_name
   alias_method :givenName, :given_name
@@ -38,6 +38,7 @@ class ADUser
     @upn = entry["userPrincipalName"][0]  # pietro.donatini@personale.dir.unibo.it
     @object_sid = entry["objectSid"][0]
     @id_anagrafica_unica = entry["extensionAttribute6"] ? entry["extensionAttribute6"][0] : nil
+    @disabled = (entry["userAccountControl"].first.to_i & 2) != 0
 
     # description non esiste in studenti MAH
     # ci mettiamo il title nel caso :-)
